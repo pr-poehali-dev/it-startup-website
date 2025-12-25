@@ -1,10 +1,41 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Icon from "@/components/ui/icon";
+import AuthDialog from "@/components/AuthDialog";
+import ConsultationDialog from "@/components/ConsultationDialog";
 
 export default function Index() {
+  const [userId, setUserId] = useState<string | null>(null);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [consultationOpen, setConsultationOpen] = useState(false);
+
+  const handleBookConsultation = () => {
+    if (!userId) {
+      setAuthOpen(true);
+    } else {
+      setConsultationOpen(true);
+    }
+  };
+
   return (
     <div className="min-h-screen">
+      <AuthDialog 
+        open={authOpen} 
+        onOpenChange={setAuthOpen}
+        onSuccess={(id) => {
+          setUserId(id);
+          setConsultationOpen(true);
+        }}
+      />
+      
+      <ConsultationDialog
+        open={consultationOpen}
+        onOpenChange={setConsultationOpen}
+        userId={userId}
+        onNeedAuth={() => setAuthOpen(true)}
+      />
+
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="text-2xl font-heading font-bold">TechVision</div>
@@ -12,7 +43,9 @@ export default function Index() {
             <a href="#solutions" className="text-sm hover:text-primary transition-colors">Решения</a>
             <a href="#process" className="text-sm hover:text-primary transition-colors">Процесс</a>
             <a href="#testimonials" className="text-sm hover:text-primary transition-colors">Отзывы</a>
-            <Button size="sm">Связаться</Button>
+            <Button size="sm" onClick={handleBookConsultation}>
+              {userId ? "Записаться" : "Войти"}
+            </Button>
           </div>
         </div>
       </nav>
@@ -32,7 +65,7 @@ export default function Index() {
                 Помогаем инвесторам и B2B-клиентам принимать решения на основе данных.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Button size="lg" className="text-base">
+                <Button size="lg" className="text-base" onClick={handleBookConsultation}>
                   Начать проект
                   <Icon name="ArrowRight" className="ml-2" size={20} />
                 </Button>
@@ -226,7 +259,7 @@ export default function Index() {
                 Начните с бесплатной консультации. Обсудим ваши цели и предложим оптимальную стратегию.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
-                <Button size="lg" className="text-base">
+                <Button size="lg" className="text-base" onClick={handleBookConsultation}>
                   Записаться на консультацию
                   <Icon name="Calendar" className="ml-2" size={20} />
                 </Button>

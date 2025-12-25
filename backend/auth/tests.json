@@ -1,0 +1,32 @@
+{
+  "tests": [
+    {
+      "name": "Send verification code via email",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "send_code",
+        "email": "test@example.com"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true,
+        "message": "string",
+        "code": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Verify code",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "action": "verify_code",
+        "email": "test@example.com",
+        "code": "123456"
+      },
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}
