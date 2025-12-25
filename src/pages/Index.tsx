@@ -308,7 +308,7 @@ export default function Index() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            © 2024 TechVision. Все права защищены.
+            © 2025 TechVision. Все права защищены.
           </div>
         </div>
       </footer>

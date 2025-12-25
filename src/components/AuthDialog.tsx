@@ -22,9 +22,31 @@ export default function AuthDialog({ open, onOpenChange, onSuccess }: AuthDialog
   const [error, setError] = useState("");
   const [sentCode, setSentCode] = useState("");
 
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidPhone = (phone: string): boolean => {
+    const phoneRegex = /^[\d\s\+\-\(\)]+$/;
+    return phoneRegex.test(phone) && phone.replace(/\D/g, '').length >= 10;
+  };
+
   const handleSendCode = async () => {
     setLoading(true);
     setError("");
+    
+    if (authMethod === "email" && !isValidEmail(email)) {
+      setError("Введите корректный email адрес");
+      setLoading(false);
+      return;
+    }
+    
+    if (authMethod === "phone" && !isValidPhone(phone)) {
+      setError("Введите корректный номер телефона");
+      setLoading(false);
+      return;
+    }
     
     try {
       const response = await fetch("https://functions.poehali.dev/fa068b12-cf81-465a-aec3-348b02b97852", {
@@ -153,7 +175,7 @@ export default function AuthDialog({ open, onOpenChange, onSuccess }: AuthDialog
             <Button 
               className="w-full" 
               onClick={handleSendCode}
-              disabled={loading || (authMethod === "email" ? !email : !phone)}
+              disabled={loading || (authMethod === "email" ? !email || !isValidEmail(email) : !phone || !isValidPhone(phone))}
             >
               {loading ? "Отправка..." : "Получить код"}
               <Icon name="Send" className="ml-2" size={16} />
